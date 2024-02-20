@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Home from '@/pages/home';
 
-describe('Hephaestus Home Testing Suite', () => {
+describe('Home Page', () => {
   it('should have a div named blacksmith', () => {
     render(<Home />); // Arrange
 
