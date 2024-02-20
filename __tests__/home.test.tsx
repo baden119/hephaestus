@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Home from '../index'; //?
+import Home from '@/pages/home';
 
 describe('Hephaestus Home Testing Suite', () => {
   it('should have a div named blacksmith', () => {
