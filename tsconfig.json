@@ -32,7 +32,8 @@
     "**/*.ts",
     "**/*.tsx",
     "types.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "pages/home/__tests__/home.test.js"
   ],
   "exclude": ["node_modules"]
 }
