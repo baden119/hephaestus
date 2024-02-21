@@ -1,7 +1,11 @@
-export const metadata = {
-  title: 'Hephaestus',
-};
+// export const metadata = {
+//   title: 'Hephaestus',
+// };
 
 export default function Page() {
-  return <h1>Hephaestus Router</h1>;
+  return (
+    <>
+      <h1>Hephaestus Router</h1>;
+    </>
+  );
 }
