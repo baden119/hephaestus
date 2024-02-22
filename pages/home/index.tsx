@@ -4,8 +4,13 @@ import { Container } from '@/components/styled/Container.styled';
 import GlobalStyles from '@/components/styled/Global';
 import Header from '@/components/Header/Header';
 import { Flex } from '@/components/styled/Flex.styled';
+import ShowSelect from '@/components/ShowSelect/ShowSelect';
 import Hammer from '@/components/Hammer/Hammer';
 import Revenge from '@/components/Revenge/Revenge';
+
+import { Exo } from 'next/font/google';
+
+const exo = Exo({ weight: ['400', '700'], subsets: ['latin'] });
 
 const theme = {
   colours: {
@@ -32,6 +37,7 @@ export default function Home() {
         <GlobalStyles />
         <Header />
         <Container role='blacksmith'>
+          <ShowSelect />
           <Flex>
             <Hammer />
             <Revenge />
