@@ -16,6 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <link
+          rel='icon'
+          href='/hephaestusIcon.svg'
+          type='image/svg'
+          sizes='200x200'
+        />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
