@@ -15,6 +15,7 @@ const ShowSelect = () => {
       <div className='hidden w-1/4 md:block'></div>
       <div className='grow'>
         <Select
+          maxMenuHeight={500}
           placeholder={'Select A Show'}
           isSearchable={false}
           options={showOptions}

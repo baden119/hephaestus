@@ -16,6 +16,7 @@ const config: Config = {
     extend: {
       colors: {
         babyPink: '#fac9b7',
+        altBabyPink: '#ffdacc',
         navBarPurple: '#bb8bb6',
       },
       backgroundImage: {

@@ -11,19 +11,25 @@ const Header = () => {
 
   const renderButton = () => {
     if (!loggedIn) {
-      return <div>Login Button</div>;
+      return (
+        <button className='bg-babyPink hover:bg-altBabyPink text-black font-bold py-2 px-4 rounded-full md:py-5 md:px-10'>
+          Login
+        </button>
+      );
     } else {
       return <div>User Name Logged In</div>;
     }
   };
 
   return (
-    <div className='mx-auto p-6 bg-navBarPurple flex justify-between items-center'>
-      <h2 className={`${pirata.className} text-black text-[3.5vw] mx-8`}>
+    <div className='p-2 bg-navBarPurple flex justify-between items-center md:p-6'>
+      <h2
+        className={`${pirata.className} text-black text-4xl md:mx-8 md:text-6xl`}
+      >
         Hephaestus
       </h2>
       {renderButton()}
-      <div className='mr-20'>About</div>
+      <div className='md:mr-20'>About</div>
     </div>
   );
 };
