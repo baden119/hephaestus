@@ -1,3 +1,4 @@
+'use client';
 import { Sirin_Stencil } from 'next/font/google';
 import Header from '@/components/Header';
 import ShowSelect from '@/components/ShowSelect';

@@ -1,11 +1,5 @@
-'use client';
 import Select from 'react-select';
 import { HardCodedShowList } from '../data/ShowList';
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
 
 const showOptions = HardCodedShowList.map((show) => {
   return {
@@ -15,13 +9,18 @@ const showOptions = HardCodedShowList.map((show) => {
   };
 });
 
-console.log(showOptions);
 const ShowSelect = () => {
   return (
-    <div className='bg-babyPink'>
-      <div className='mx-10'>
-        <Select options={showOptions} />
+    <div className='bg-babyPink flex justify-between'>
+      <div className='hidden w-1/4 md:block'></div>
+      <div className='grow'>
+        <Select
+          placeholder={'Select A Show'}
+          isSearchable={false}
+          options={showOptions}
+        />
       </div>
+      <div className='hidden w-1/4 md:block'></div>
     </div>
   );
 };
