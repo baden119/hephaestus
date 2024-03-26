@@ -1,8 +1,16 @@
+import Link from 'next/link';
+import { FaSpotify } from 'react-icons/fa';
 import { Pirata_One } from 'next/font/google';
+import { Unbounded } from 'next/font/google';
 import { useState } from 'react';
 
 const pirata = Pirata_One({
   weight: '400',
+  subsets: ['latin'],
+});
+
+const unbounded = Unbounded({
+  weight: '300',
   subsets: ['latin'],
 });
 
@@ -12,8 +20,9 @@ const Header = () => {
   const renderButton = () => {
     if (!loggedIn) {
       return (
-        <button className='bg-babyPink hover:bg-altBabyPink text-black font-bold py-2 px-4 rounded-full md:py-5 md:px-10'>
-          Login
+        <button className='bg-babyPink flex items-center hover:bg-altBabyPink text-black  py-2 px-4 rounded-full md:py-5 md:px-10'>
+          <div className='mr-1'>{<FaSpotify />}</div>
+          <div className={`${unbounded.className}`}>Log in with Spotify</div>
         </button>
       );
     } else {
@@ -29,7 +38,12 @@ const Header = () => {
         Hephaestus
       </h2>
       {renderButton()}
-      <div className='md:mr-20'>About</div>
+      <Link
+        className={`${unbounded.className} hover:underline md:mr-20`}
+        href={'/about'}
+      >
+        About
+      </Link>
     </div>
   );
 };

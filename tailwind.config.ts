@@ -18,6 +18,8 @@ const config: Config = {
         babyPink: '#fac9b7',
         altBabyPink: '#ffdacc',
         navBarPurple: '#bb8bb6',
+        altNavBarPurple: '#d164c6',
+        tableStripe: '#cc968d',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
