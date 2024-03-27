@@ -41,7 +41,7 @@ const ShowSelect = () => {
   return (
     <div className='flex justify-between'>
       <div className='hidden w-1/4 md:block'></div>
-      <div className='grow my-3 -z-1000'>
+      <div className='grow my-3 mx-1'>
         <Select
           maxMenuHeight={500}
           placeholder={'Select A Show'}
