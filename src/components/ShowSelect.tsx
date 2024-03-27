@@ -47,6 +47,7 @@ const ShowSelect = () => {
           placeholder={'Select A Show'}
           isSearchable={false}
           options={selectOptions}
+          instanceId={'ShowSelect'}
         />
       </div>
       <div className='hidden w-1/4 md:block'></div>

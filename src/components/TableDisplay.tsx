@@ -1,4 +1,10 @@
 import DemoPlayList from '../data/DemoEpisodeData.json';
+import { Unbounded } from 'next/font/google';
+
+const unbounded = Unbounded({
+  weight: '300',
+  subsets: ['latin'],
+});
 
 const CreateDate = (date: string) => {
   return new Intl.DateTimeFormat('en-AU', {
@@ -7,13 +13,12 @@ const CreateDate = (date: string) => {
     year: '2-digit',
   }).format(new Date(date));
 };
-const cellStyle = 'p-1 border border-purple-400';
-
+const cellStyle = 'px-1 border border-purple-400 text-sm md:text-base md:p-1';
 const TableDisplay = () => {
   return (
     <div className='flex justify-between'>
       <div className='hidden w-1/4 md:block'></div>
-      <table className='table-auto border-collapse border border-purple-400'>
+      <table className='grow table-auto border-collapse border border-purple-400 mx-1'>
         <thead>
           <tr>
             <th className={cellStyle}>Date</th>
@@ -24,7 +29,33 @@ const TableDisplay = () => {
           {DemoPlayList.data.map((song) => {
             return (
               <tr key={song.id} className='even:bg-tableStripe'>
-                <td className={cellStyle}>{CreateDate(DemoPlayList.date)}</td>
+                <td className={cellStyle + ' text-center'}>
+                  {CreateDate(DemoPlayList.date)}
+                </td>
+                <td className={cellStyle}>
+                  {song.artist} / {song.track}
+                </td>
+              </tr>
+            );
+          })}
+          {DemoPlayList.data.map((song) => {
+            return (
+              <tr key={song.id} className='even:bg-tableStripe'>
+                <td className={cellStyle + ' text-center'}>
+                  {CreateDate(DemoPlayList.date)}
+                </td>
+                <td className={cellStyle}>
+                  {song.artist} / {song.track}
+                </td>
+              </tr>
+            );
+          })}
+          {DemoPlayList.data.map((song) => {
+            return (
+              <tr key={song.id} className='even:bg-tableStripe'>
+                <td className={cellStyle + ' text-center'}>
+                  {CreateDate(DemoPlayList.date)}
+                </td>
                 <td className={cellStyle}>
                   {song.artist} / {song.track}
                 </td>

@@ -20,7 +20,7 @@ const Header = () => {
   const renderButton = () => {
     if (!loggedIn) {
       return (
-        <button className='bg-babyPink flex items-center hover:bg-altBabyPink text-black text-xs py-1 px-2 mx-2 rounded-full md:py-5 md:px-10 md:text-base'>
+        <button className='bg-babyPink flex items-center hover:bg-altBabyPink text-black text-xs p-1 mx-2 rounded-full md:py-5 md:px-10 md:text-base'>
           <div className='hidden md:block md:mr-1'>{<FaSpotify />}</div>
           <div className={`${unbounded.className}`}>Log in with Spotify</div>
         </button>
@@ -39,7 +39,7 @@ const Header = () => {
       </h2>
       {renderButton()}
       <Link
-        className={`${unbounded.className} hover:underline text-xs md:mr-20 md:text-base`}
+        className={`${unbounded.className} hover:underline text-sm md:mr-20 md:text-base`}
         href={'/about'}
       >
         About
