@@ -1,4 +1,4 @@
-import DemoPlayList from "../data/DemoEpisodeData.json";
+import DemoPlayList from "../../data/DemoEpisodeData.json";
 import { Dosis } from "next/font/google";
 import { DM_Sans } from "next/font/google";
 
@@ -10,7 +10,7 @@ const dosis = Dosis({
 const dm_sans = DM_Sans({
   weight: "400",
   subsets: ["latin"],
-})
+});
 
 const CreateDate = (date: string) => {
   return new Intl.DateTimeFormat("en-AU", {
