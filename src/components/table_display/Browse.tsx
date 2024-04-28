@@ -1,11 +1,11 @@
 import DemoPlayList from "../../data/DemoEpisodeData.json";
-import { Dosis } from "next/font/google";
+// import { Dosis } from "next/font/google";
 import { DM_Sans } from "next/font/google";
 
-const dosis = Dosis({
-  weight: "400",
-  subsets: ["latin"],
-});
+// const dosis = Dosis({
+//   weight: "400",
+//   subsets: ["latin"],
+// });
 
 const dm_sans = DM_Sans({
   weight: "400",
@@ -20,7 +20,8 @@ const CreateDate = (date: string) => {
   }).format(new Date(date));
 };
 const cellStyle = "px-1 border border-purple-400 text-sm md:text-base md:p-1";
-const TableDisplay = () => {
+
+const Browse = () => {
   return (
     <div className="flex justify-between">
       <div className="hidden w-1/4 md:block"></div>
@@ -76,4 +77,4 @@ const TableDisplay = () => {
     </div>
   );
 };
-export default TableDisplay;
+export default Browse;
