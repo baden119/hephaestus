@@ -7,7 +7,8 @@ import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
 
 export default function Home() {
-  const [tableDisplayState, setTableDisplayState] = useState("Browse");
+  const [tableDisplayState, setTableDisplayState] = useState<string>("Browse");
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   const renderTable = () => {
     if (tableDisplayState === "Browse") {
@@ -25,8 +26,8 @@ export default function Home() {
 
   return (
     <div className="bg-babyPink min-h-screen">
-      <Header />
-      <ShowSelect />
+      <Header loggedIn={loggedIn} />
+      <ShowSelect loggedIn={loggedIn} />
       <div className="flex justify-center my-2">
         <button
           className="bg-navBarPurple  hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
@@ -45,6 +46,12 @@ export default function Home() {
           onClick={() => setTableDisplayState("Completed")}
         >
           Completed
+        </button>
+        <button
+          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
+          onClick={() => setLoggedIn(!loggedIn)}
+        >
+          Toggle User
         </button>
       </div>
       <div className="text-center text-xl">{tableDisplayState}</div>
