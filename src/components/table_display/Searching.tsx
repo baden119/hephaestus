@@ -26,7 +26,7 @@ const Searching = () => {
   return (
     <div className="flex justify-between">
       <div className="hidden w-1/4 md:block"></div>
-
+      {/* Set Font */}
       <div className={`${dm_sans.className} flex`}>
         {/* Table Section */}
         <div className="flex-1">
@@ -80,7 +80,7 @@ const Searching = () => {
                   },
                 }}
                 strokeWidth={5}
-                width={200}
+                width={150}
                 type="circle"
                 percent={50}
               />
