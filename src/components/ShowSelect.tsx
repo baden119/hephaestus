@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 import Select from "react-select";
+import Switch from "react-switch";
 import CurrentShowList from "../data/CurrentShowList.json";
 
 const ShowSelect = ({ loggedIn }: { loggedIn: boolean }) => {
@@ -10,15 +12,31 @@ const ShowSelect = ({ loggedIn }: { loggedIn: boolean }) => {
     };
   });
 
+  // React Switch
+  const [checked, setChecked] = useState(false);
+  const handleChange = () => {
+    setChecked(!checked);
+  };
+
   const renderPlaylistNameForm = () => {
     if (loggedIn)
       return (
-        <input
-          className="shadow appearance-none border rounded w-1/2 my-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="playListName"
-          type="text"
-          placeholder="Playlist Name"
-        ></input>
+        <div className="flex items-center">
+          <input
+            className="shadow appearance-none border rounded w-1/2 my-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="playListName"
+            type="text"
+            placeholder="Playlist Name"
+          ></input>
+          <div className="ml-4 py-5 flex flex-col items-center">
+            <Switch
+              onChange={handleChange}
+              checked={checked}
+              className="react-switch"
+            />
+            <div className="text-xs">Custom Playlist Name</div>
+          </div>
+        </div>
       );
   };
   return (
