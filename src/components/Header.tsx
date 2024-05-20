@@ -2,7 +2,6 @@ import Link from "next/link";
 import { FaSpotify } from "react-icons/fa";
 import { Pirata_One } from "next/font/google";
 import { Unbounded } from "next/font/google";
-import { useState } from "react";
 
 const pirata = Pirata_One({
   weight: "400",

@@ -24,6 +24,13 @@ export default function Home() {
     }
   };
 
+  const apiTest = async () => {
+    console.log("Testing API!");
+    const res = await fetch("/api/club/");
+    const clubMsg = await res.json();
+    console.log(clubMsg);
+  };
+
   return (
     <div className="bg-babyPink min-h-screen">
       <Header loggedIn={loggedIn} />
@@ -52,6 +59,12 @@ export default function Home() {
           onClick={() => setLoggedIn(!loggedIn)}
         >
           Toggle User
+        </button>
+        <button
+          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
+          onClick={() => apiTest()}
+        >
+          API Test
         </button>
       </div>
       <div className="text-center text-xl">{tableDisplayState}</div>
