@@ -24,9 +24,16 @@ export default function Home() {
     }
   };
 
-  const apiTest = async () => {
-    console.log("Testing API!");
+  const apiTestFetch = async () => {
     const res = await fetch("/api/club/");
+    const clubMsg = await res.json();
+    console.log(clubMsg);
+  };
+
+  const apiTestPost = async () => {
+    const res = await fetch("/api/club/", {
+      method: "POST",
+    });
     const clubMsg = await res.json();
     console.log(clubMsg);
   };
@@ -62,9 +69,15 @@ export default function Home() {
         </button>
         <button
           className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => apiTest()}
+          onClick={() => apiTestFetch()}
         >
-          API Test
+          API Fetch
+        </button>
+        <button
+          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
+          onClick={() => apiTestPost()}
+        >
+          API Post
         </button>
       </div>
       <div className="text-center text-xl">{tableDisplayState}</div>
