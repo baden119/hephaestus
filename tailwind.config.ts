@@ -15,11 +15,11 @@ const config: Config = {
     },
     extend: {
       colors: {
-        babyPink: '#fac9b7',
+        babyPink: '#07f9d9',
         altBabyPink: '#ffdacc',
-        navBarPurple: '#bb8bb6',
+        navBarPurple: '#f9076c',
         altNavBarPurple: '#d164c6',
-        tableStripe: '#cc968d',
+        tableStripe: '#07f99c',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

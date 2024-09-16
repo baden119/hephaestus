@@ -4,11 +4,17 @@ import Select from "react-select";
 import Switch from "react-switch";
 import CurrentShowList from "../data/CurrentShowList.json";
 
-const ShowSelect = ({ loggedIn }: { loggedIn: boolean }) => {
+interface ShowSelect_props {
+  loggedIn: boolean;
+  callback?: any;
+}
+
+const ShowSelect = ({ loggedIn, callback }: ShowSelect_props) => {
   let selectOptions = CurrentShowList.map((show) => {
     return {
       label: show.name,
       value: show.id,
+      url: show.url,
     };
   });
 
@@ -16,6 +22,11 @@ const ShowSelect = ({ loggedIn }: { loggedIn: boolean }) => {
   const [checked, setChecked] = useState(false);
   const handleChange = () => {
     setChecked(!checked);
+  };
+
+  const handleSelect = (e: any) => {
+    // setSelectedItem(e.target.value)
+    callback(e.url);
   };
 
   const renderPlaylistNameForm = () => {
@@ -49,6 +60,7 @@ const ShowSelect = ({ loggedIn }: { loggedIn: boolean }) => {
           isSearchable={false}
           options={selectOptions}
           instanceId={"ShowSelect"}
+          onChange={handleSelect}
         />
         {renderPlaylistNameForm()}
       </div>
