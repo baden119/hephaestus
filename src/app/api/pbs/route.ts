@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server';
+import { PbsTrack, PbsEpisode } from '@/utils/interfaces';
 import axios from "axios";
-
-interface PbsTrack {
-id: number;
-artist: string;
-title: string
-};
-
-interface PbsEpisode {
-  trackListURL?: string
-  trackList?: PbsTrack[] | null
-  date: string
-}
 
 interface PbsApiEpisodeResponse {
 start: string,
 episodeRestUrl:	string
 }
-
 
 // Fetches broadcast dates and track listing URLs for 10 latest episodes of a PBS Show
 const fetchTenEpisodes = async (url: string): Promise<PbsEpisode[] | string>  => {
@@ -56,6 +44,7 @@ const fetchTenEpisodes = async (url: string): Promise<PbsEpisode[] | string>  =>
 
 // Takes in an array of endpoints on the PBS API, fetches and formats this data into an array of tracklists representing individual PBS episodes.
 const fetchEpisodeTrackLists = async (episodeList: PbsEpisode[]) :  Promise<PbsEpisode[] | string> => {
+  let idCount = 0
   try {
     // map each episode URL to a promise
     const fetchPromises = episodeList.map(episode => 
@@ -79,9 +68,10 @@ const fetchEpisodeTrackLists = async (episodeList: PbsEpisode[]) :  Promise<PbsE
         }
       }
       // Parse out Artist and Title information from API response
-      const parsedTrackList = trackList.map((trackData: PbsTrack, index: number) => {
+      const parsedTrackList = trackList.map((trackData: PbsTrack) => {
+          idCount += 1
           return {
-            id: index,
+            id: idCount,
             artist: trackData.artist,
             title: trackData.title
           }
@@ -114,7 +104,7 @@ const fetchEpisodeTrackLists = async (episodeList: PbsEpisode[]) :  Promise<PbsE
     }
 
     // Fetch tracklists from PBS API
-    const trackLists = await fetchEpisodeTrackLists(episodeList);
+    const episodesWithTrackLists = await fetchEpisodeTrackLists(episodeList);
 
-    return NextResponse.json({ trackLists: trackLists });
+    return NextResponse.json(episodesWithTrackLists);
   }

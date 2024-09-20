@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { PbsTrack, PbsEpisode } from "@/utils/interfaces";
 import axios from "axios";
 import Header from "@/components/Header";
 import ShowSelect from "@/components/ShowSelect";
@@ -10,11 +11,16 @@ import Stf01 from "@/components/state_test_facility/Stf01";
 import Stf02 from "@/components/state_test_facility/Stf02";
 
 export default function Home() {
-  const [tableDisplayState, setTableDisplayState] = useState<string>("Browse");
+  const [tableDisplayState, setTableDisplayState] = useState<string | null>(
+    null
+  );
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   // Selected PBS Show Value
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
+
+  // Song List
+  const [episodeList, setEpisodeList] = useState<PbsEpisode[] | null>(null);
 
   // Initial State Test Value 01
   const [state_test_value01, setState_test_value01] =
@@ -28,15 +34,14 @@ export default function Home() {
   const state_test_module_CSS =
     "box-border h-50 w-50 p-10 m-5 border-4 text-lg bg-green-500 rounded-md";
 
+  // When PBS Show is selected, fetch episodes from API and save songlist to state.
   useEffect(() => {
     const fetchSongList = async () => {
       try {
-        const { data, status } = await axios.post<{
-          // TODO: figure out typescript here
-          // data: { message: string };
-          data: any;
-        }>("/api/pbs", { url: selectedShowURL });
-        console.log(data.trackLists);
+        const { data } = await axios.post<PbsEpisode[]>("/api/pbs", {
+          url: selectedShowURL,
+        });
+        setEpisodeList(data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.log("error message: ", error.message);
@@ -51,6 +56,11 @@ export default function Home() {
       fetchSongList();
     }
   }, [selectedShowURL]);
+
+  // When SongList is saved into state, display in a table
+  useEffect(() => {
+    setTableDisplayState("Browse");
+  }, [episodeList]);
 
   // Show Select Callback Function
   const handle_showSelect = (data: string) => {
@@ -68,7 +78,7 @@ export default function Home() {
 
   const renderTable = () => {
     if (tableDisplayState === "Browse") {
-      return <Browse />;
+      return <Browse episodeList={episodeList} />;
     }
 
     if (tableDisplayState === "Searching") {
@@ -167,8 +177,8 @@ export default function Home() {
         </button>
       </div>
       {/* Render Table */}
-      {/* <div className="text-center text-xl">{tableDisplayState}</div> */}
-      {/* {renderTable()} */}
+      <div className="text-center text-xl">{tableDisplayState}</div>
+      {renderTable()}
       <div className="container mx-auto flex">
         <Stf01
           CSS_input={state_test_module_CSS}
