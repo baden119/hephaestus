@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaSpotify } from "react-icons/fa";
 import { Pirata_One } from "next/font/google";
 import { Unbounded } from "next/font/google";
+import { logIn } from "@/utils/logIn";
 
 const pirata = Pirata_One({
   weight: "400",
@@ -17,7 +18,10 @@ const Header = ({ loggedIn }: { loggedIn: boolean }) => {
   const renderButton = () => {
     if (!loggedIn) {
       return (
-        <button className="bg-babyPink flex items-center hover:bg-altBabyPink text-black text-xs p-1 mx-2 rounded-full md:py-5 md:px-10 md:text-base">
+        <button
+          className="bg-babyPink flex items-center hover:bg-altBabyPink text-black text-xs p-1 mx-2 rounded-full md:py-5 md:px-10 md:text-base"
+          onClick={() => logIn()}
+        >
           <div className="hidden md:block md:mr-1">{<FaSpotify />}</div>
           <div className={`${unbounded.className}`}>Log in with Spotify</div>
         </button>
