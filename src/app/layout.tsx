@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AuthProvider from "../components/AuthProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,11 @@ export default function RootLayout({
           sizes="200x200"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {/* Authprovider component put here copying from next-auth-spotify example */}
+        {/* TODO: maybe move to main page.tsx */}
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

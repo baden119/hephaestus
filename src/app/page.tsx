@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { PbsTrack, PbsEpisode } from "@/utils/interfaces";
 import axios from "axios";
 import Header from "@/components/Header";
@@ -33,6 +34,9 @@ export default function Home() {
   // State test component CSS
   const state_test_module_CSS =
     "box-border h-50 w-50 p-10 m-5 border-4 text-lg bg-green-500 rounded-md";
+
+  // Session serup for next-auth
+  const { data: session } = useSession();
 
   // When PBS Show is selected, fetch episodes from API and save songlist to state.
   useEffect(() => {
@@ -90,55 +94,68 @@ export default function Home() {
     }
   };
 
-  // type testFetchResponse = {
-  //   data: { message: string };
+  const loginCentral = () => {
+    if (session) {
+      console.log("Session Detected");
+      return "Logged In?";
+    } else {
+      return (
+        <button
+          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
+          onClick={() => signIn()}
+        >
+          Login Central
+        </button>
+      );
+    }
+  };
+
+  // const apiTestFetch = async () => {
+  //   // const res = await fetch("/api/dragon/");
+  //   // const clubMsg = await res.json();
+  //   // console.log(clubMsg);
+  //   try {
+  //     const { data, status } = await axios.get<{ data: { message: string } }>(
+  //       "/api/dragon/"
+  //     );
+  //     console.log(data);
+  //     console.log("response status is: ", status);
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.log("error message: ", error.message);
+  //       return error.message;
+  //     } else {
+  //       console.log("unexpected error: ", error);
+  //       return "An unexpected error occurred";
+  //     }
+  //   }
   // };
 
-  const apiTestFetch = async () => {
-    // const res = await fetch("/api/dragon/");
-    // const clubMsg = await res.json();
-    // console.log(clubMsg);
-    try {
-      const { data, status } = await axios.get<{ data: { message: string } }>(
-        "/api/dragon/"
-      );
-      console.log(data);
-      console.log("response status is: ", status);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
-        return error.message;
-      } else {
-        console.log("unexpected error: ", error);
-        return "An unexpected error occurred";
-      }
-    }
-  };
-
-  const apiTestPost = async () => {
-    try {
-      const { data, status } = await axios.post<{ data: { message: string } }>(
-        "/api/dragon",
-        { package: "got that WMD" }
-      );
-      console.log(data);
-      console.log("response status is: ", status);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
-        return error.message;
-      } else {
-        console.log("unexpected error: ", error);
-        return "An unexpected error occurred";
-      }
-    }
-  };
+  // const apiTestPost = async () => {
+  //   try {
+  //     const { data, status } = await axios.post<{ data: { message: string } }>(
+  //       "/api/dragon",
+  //       { package: "got that WMD" }
+  //     );
+  //     console.log(data);
+  //     console.log("response status is: ", status);
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.log("error message: ", error.message);
+  //       return error.message;
+  //     } else {
+  //       console.log("unexpected error: ", error);
+  //       return "An unexpected error occurred";
+  //     }
+  //   }
+  // };
 
   return (
     <div className="bg-babyPink min-h-screen">
       <Header loggedIn={loggedIn} />
       <ShowSelect loggedIn={loggedIn} callback={handle_showSelect} />
       <div className="flex justify-center my-2">
+        {loginCentral()}
         <button
           className="bg-navBarPurple  hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
           onClick={() => setTableDisplayState("Browse")}
@@ -163,18 +180,6 @@ export default function Home() {
         >
           Toggle User
         </button>
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => apiTestFetch()}
-        >
-          API Fetch
-        </button>
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => apiTestPost()}
-        >
-          API Post
-        </button>
       </div>
       {/* Render Table */}
       <div className="text-center text-xl">{tableDisplayState}</div>
@@ -191,6 +196,7 @@ export default function Home() {
           onDataFromChild={handle_Stf02}
         />
       </div>
+      <p>Post Heatwave Breeze</p>
     </div>
   );
 }
