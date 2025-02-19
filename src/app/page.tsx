@@ -196,7 +196,6 @@ export default function Home() {
           onDataFromChild={handle_Stf02}
         />
       </div>
-      <p>Post Heatwave Breeze</p>
     </div>
   );
 }
