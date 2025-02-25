@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import { PbsTrack, PbsEpisode } from "@/utils/interfaces";
 import axios from "axios";
 import spotifyApi from "@/lib/spotify";
+import PlaylistNameForm from "@/components/PlaylistNameForm";
+import SpotifySearch from "@/components/SpotifySearch";
 import Header from "@/components/Header";
 import ShowSelect from "@/components/ShowSelect";
 import Browse from "@/components/table_display/Browse";
 import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
-import Stf01 from "@/components/state_test_facility/Stf01";
-import Stf02 from "@/components/state_test_facility/Stf02";
 
 //TODO proper typing for sessionData
 export const Forge = ({ sessionData }: any) => {
@@ -17,26 +17,13 @@ export const Forge = ({ sessionData }: any) => {
     null
   );
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
   const [displayName, setDisplayName] = useState<string | null>(null);
-
-  // Selected PBS Show Value
+  const [playListName, setPlaylistName] = useState("");
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
-
-  // Song List
+  const [selectedShowName, setSelectedShowName] = useState<string | null>(null);
   const [episodeList, setEpisodeList] = useState<PbsEpisode[] | null>(null);
-
-  // Initial State Test Value 01
-  const [state_test_value01, setState_test_value01] =
-    useState<string>("rocksteady cut");
-
-  // Initial State Test Value 02
-  const [state_test_value02, setState_test_value02] =
-    useState<string>("Rubadub style");
-
-  // State test component CSS
-  const state_test_module_CSS =
-    "box-border h-50 w-50 p-10 m-5 border-4 text-lg bg-green-500 rounded-md";
+  const [searchPercentage, setSearchPercentage] = useState<number | null>(null);
+  const [searchResults, setSearchResults] = useState<PbsEpisode[] | null>(null);
 
   // When PBS Show is selected, fetch episodes from API and save songlist to state.
   useEffect(() => {
@@ -62,6 +49,7 @@ export const Forge = ({ sessionData }: any) => {
   }, [selectedShowURL]);
 
   // Check Session Data prop, set state values.
+  // TODO Handle expired access token!
   useEffect(() => {
     if (sessionData) {
       spotifyApi.setAccessToken(sessionData.token.access_token);
@@ -84,40 +72,51 @@ export const Forge = ({ sessionData }: any) => {
     setTableDisplayState("Browse");
   }, [episodeList]);
 
-  // Show Select Callback Function
-  const handle_showSelect = (data: string) => {
-    setSelectedShowURL(data);
-  };
-  // State Test component 01 callback function
-  const handle_Stf01 = (data: string) => {
-    setState_test_value01(data);
+  // Adjust TableDisplay during and after Spotify Search
+  useEffect(() => {
+    if (searchPercentage) {
+      if (searchPercentage > 0 && searchPercentage < 100) {
+        setTableDisplayState("Searching");
+      } else if (searchResults && searchPercentage === 100) {
+        setTableDisplayState("Completed");
+      }
+    }
+  }, [searchPercentage, searchResults]);
+
+  // Callback Functions
+  const handle_showSelect = (data: any) => {
+    setSelectedShowURL(data.SelectedShowURL);
+    setSelectedShowName(data.SelectedShowName);
   };
 
-  // State Test component 01 callback function
-  const handle_Stf02 = (data: string) => {
-    setState_test_value02(data);
+  const handle_PlaylistName = (data: string) => {
+    setPlaylistName(data);
   };
 
-  const renderSpotifyTest = () => {
-    const spotifyTest = () => {
-      spotifyApi.getArtistAlbums("43ZHCT0cAZBISjO8DG9PnE").then(
-        function (data) {
-          console.log("Artist albums", data.body);
-        },
-        function (err) {
-          console.error(err);
-        }
-      );
-    };
+  const handle_SearchResultsCallback = (data: PbsEpisode[]) => {
+    setSearchResults(data);
+  };
 
-    if (sessionData) {
+  const handle_SearchPercentageCallback = (data: number) => {
+    setSearchPercentage(data);
+  };
+
+  // Component Rendering
+  const renderSpotifyFunctionality = () => {
+    if (loggedIn) {
       return (
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => spotifyTest()}
-        >
-          Spotify Test
-        </button>
+        <div>
+          <PlaylistNameForm
+            pbsShowName={selectedShowName}
+            callback={handle_PlaylistName}
+          />
+          <SpotifySearch
+            spotifyApi={spotifyApi}
+            episodeList={episodeList}
+            searchResultsCallback={handle_SearchResultsCallback}
+            searchPercentageCallback={handle_SearchPercentageCallback}
+          />
+        </div>
       );
     }
   };
@@ -126,102 +125,66 @@ export const Forge = ({ sessionData }: any) => {
     if (tableDisplayState === "Browse") {
       return <Browse episodeList={episodeList} />;
     }
-
     if (tableDisplayState === "Searching") {
-      return <Searching />;
+      return (
+        <Searching
+          episodeList={episodeList}
+          searchPercentage={searchPercentage}
+        />
+      );
     }
-
     if (tableDisplayState === "Completed") {
-      return <Completed />;
+      return <Completed searchResults={searchResults} />;
     }
   };
-
-  // const apiTestFetch = async () => {
-  //   // const res = await fetch("/api/dragon/");
-  //   // const clubMsg = await res.json();
-  //   // console.log(clubMsg);
-  //   try {
-  //     const { data, status } = await axios.get<{ data: { message: string } }>(
-  //       "/api/dragon/"
-  //     );
-  //     console.log(data);
-  //     console.log("response status is: ", status);
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       console.log("error message: ", error.message);
-  //       return error.message;
-  //     } else {
-  //       console.log("unexpected error: ", error);
-  //       return "An unexpected error occurred";
-  //     }
-  //   }
-  // };
-
-  // const apiTestPost = async () => {
-  //   try {
-  //     const { data, status } = await axios.post<{ data: { message: string } }>(
-  //       "/api/dragon",
-  //       { package: "got that WMD" }
-  //     );
-  //     console.log(data);
-  //     console.log("response status is: ", status);
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       console.log("error message: ", error.message);
-  //       return error.message;
-  //     } else {
-  //       console.log("unexpected error: ", error);
-  //       return "An unexpected error occurred";
-  //     }
-  //   }
-  // };
 
   return (
     <div className="bg-babyPink min-h-screen">
       <Header displayName={displayName} loggedIn={loggedIn} />
       <ShowSelect loggedIn={loggedIn} callback={handle_showSelect} />
-      <div className="flex justify-center my-2">
-        <button
-          className="bg-navBarPurple  hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => setTableDisplayState("Browse")}
-        >
-          Browse
-        </button>
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => setTableDisplayState("Searching")}
-        >
-          Searching
-        </button>
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => setTableDisplayState("Completed")}
-        >
-          Completed
-        </button>
-        <button
-          className="bg-navBarPurple hover:bg-altNavBarPurple text-black mx-1 py-2 px-4 rounded-full md:py-5 md:px-10"
-          onClick={() => setLoggedIn(!loggedIn)}
-        >
-          Toggle User
-        </button>
-        {renderSpotifyTest()}
-      </div>
-      {/* Render Table */}
+      {renderSpotifyFunctionality()}
       <div className="text-center text-xl">{tableDisplayState}</div>
       {renderTable()}
-      <div className="container mx-auto flex">
-        <Stf01
-          CSS_input={state_test_module_CSS}
-          value01={state_test_value01}
-          onDataFromChild={handle_Stf01}
-        />
-        <Stf02
-          CSS_input={state_test_module_CSS}
-          value02={state_test_value02}
-          onDataFromChild={handle_Stf02}
-        />
-      </div>
     </div>
   );
 };
+
+// const apiTestFetch = async () => {
+//   // const res = await fetch("/api/dragon/");
+//   // const clubMsg = await res.json();
+//   // console.log(clubMsg);
+//   try {
+//     const { data, status } = await axios.get<{ data: { message: string } }>(
+//       "/api/dragon/"
+//     );
+//     console.log(data);
+//     console.log("response status is: ", status);
+//   } catch (error) {
+//     if (axios.isAxiosError(error)) {
+//       console.log("error message: ", error.message);
+//       return error.message;
+//     } else {
+//       console.log("unexpected error: ", error);
+//       return "An unexpected error occurred";
+//     }
+//   }
+// };
+
+// const apiTestPost = async () => {
+//   try {
+//     const { data, status } = await axios.post<{ data: { message: string } }>(
+//       "/api/dragon",
+//       { package: "got that WMD" }
+//     );
+//     console.log(data);
+//     console.log("response status is: ", status);
+//   } catch (error) {
+//     if (axios.isAxiosError(error)) {
+//       console.log("error message: ", error.message);
+//       return error.message;
+//     } else {
+//       console.log("unexpected error: ", error);
+//       return "An unexpected error occurred";
+//     }
+//   }
+// };

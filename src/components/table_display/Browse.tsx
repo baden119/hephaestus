@@ -1,8 +1,7 @@
-import DemoPlayList from "../../data/DemoEpisodeData.json";
 import { DM_Sans } from "next/font/google";
 import { PbsEpisode, PbsTrack } from "@/utils/interfaces";
 
-interface browse_module_props {
+interface Browse_props {
   episodeList: PbsEpisode[] | null;
 }
 
@@ -10,6 +9,8 @@ const dm_sans = DM_Sans({
   weight: "400",
   subsets: ["latin"],
 });
+
+// #LITTLEJOB Create Date, font data etc are repeated, export to single file.
 
 const CreateDate = (date: string) => {
   return new Intl.DateTimeFormat("en-AU", {
@@ -31,7 +32,7 @@ const renderRow = (song: PbsTrack, date: string) => {
   );
 };
 
-const Browse = ({ episodeList }: browse_module_props) => {
+const Browse = ({ episodeList }: Browse_props) => {
   if (episodeList)
     return (
       <div className="flex justify-between">
