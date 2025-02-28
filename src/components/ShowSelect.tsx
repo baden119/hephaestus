@@ -27,8 +27,13 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
   return (
     <div className="flex justify-between">
       <div className="hidden w-1/4 md:block"></div>
-      {/* TODO Add 'PBS Show' Label */}
       <div className="grow my-3 mx-1">
+        <label
+          className="block text-gray-700 text-sm font-bold"
+          htmlFor="ShowSelect"
+        >
+          PBS Show
+        </label>
         <Select
           maxMenuHeight={500}
           placeholder={"Select A Show"}

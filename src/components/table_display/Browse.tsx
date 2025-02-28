@@ -1,4 +1,5 @@
 import { DM_Sans } from "next/font/google";
+import { Unbounded } from "next/font/google";
 import { PbsEpisode, PbsTrack } from "@/utils/interfaces";
 
 interface Browse_props {
@@ -8,8 +9,16 @@ interface Browse_props {
 const dm_sans = DM_Sans({
   weight: "400",
   subsets: ["latin"],
+  preload: true,
 });
 
+const unbounded = Unbounded({
+  weight: "300",
+  subsets: ["latin"],
+  preload: true,
+});
+
+// TODO display something in table if there is an empty episode for the week "No Tracklist Provided"
 // TODO Create Date, font data etc are repeated, export to single file.
 
 const CreateDate = (date: string) => {

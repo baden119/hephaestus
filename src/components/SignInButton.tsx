@@ -6,6 +6,7 @@ import { Unbounded } from "next/font/google";
 const unbounded = Unbounded({
   weight: "300",
   subsets: ["latin"],
+  preload: true,
 });
 
 export const SignInButton = () => {

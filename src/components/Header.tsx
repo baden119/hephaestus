@@ -12,11 +12,13 @@ interface HeaderProps {
 const pirata = Pirata_One({
   weight: "400",
   subsets: ["latin"],
+  preload: true,
 });
 
 const unbounded = Unbounded({
   weight: "300",
   subsets: ["latin"],
+  preload: true,
 });
 
 const Header = ({ loggedIn, displayName }: HeaderProps) => {

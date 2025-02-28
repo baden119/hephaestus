@@ -6,10 +6,10 @@ import spotifyApi from "@/lib/spotify";
 import Header from "@/components/Header";
 import ShowSelect from "@/components/ShowSelect";
 import SpotifySearch from "@/components/SpotifySearch";
-import PlaylistNameForm from "@/components/PlaylistNameForm";
 import Browse from "@/components/table_display/Browse";
 import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
+import PlaylistSaver from "@/components/PlaylistSaver";
 
 // TODO proper typing for sessionData
 export const Forge = ({ sessionData }: any) => {
@@ -21,13 +21,14 @@ export const Forge = ({ sessionData }: any) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   // TODO Is it better to use null or "" for initial string values?
   const [displayName, setDisplayName] = useState<string | null>(null);
-  const [playListName, setPlaylistName] = useState("");
+  const [playlistName, setPlaylistName] = useState("");
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
   const [selectedShowName, setSelectedShowName] = useState<string | null>(null);
-  const [searchPercentage, setSearchPercentage] = useState<number | null>(null);
+  const [searchPercentage, setSearchPercentage] = useState<number>(0);
 
   // When PBS Show is selected, fetch episodes from API and save songlist to state.
   useEffect(() => {
+    setSearchResults(null);
     const fetchSongList = async () => {
       try {
         const { data } = await axios.post<PbsEpisode[]>("/api/pbs", {
@@ -47,6 +48,7 @@ export const Forge = ({ sessionData }: any) => {
     if (selectedShowURL !== null) {
       fetchSongList();
     }
+    setTableDisplayState("Browse");
   }, [selectedShowURL]);
 
   // Check Session Data prop, set state values.
@@ -65,13 +67,9 @@ export const Forge = ({ sessionData }: any) => {
           console.error(err);
         }
       );
+      // TODO maybe reset some state values here?
     } else setLoggedIn(false);
   }, [sessionData]);
-
-  // When SongList is saved into state (via ShowSelect component), display in a table.
-  useEffect(() => {
-    setTableDisplayState("Browse");
-  }, [episodeList]);
 
   // Adjust TableDisplay during and after Spotify Search
   useEffect(() => {
@@ -102,21 +100,35 @@ export const Forge = ({ sessionData }: any) => {
     setSearchPercentage(data);
   };
 
+  const handle_PlaylistSaverCallback = () => {
+    console.log("Data recieved from Playlist Saver component...");
+  };
+
   // Component Rendering
-  // TODO Render Spotify Search correctly, dont show if search complete, replace with playlist save component.
-  const renderSpotifyFunctionality = () => {
-    if (loggedIn) {
+  const renderSpotifySearch = () => {
+    if (loggedIn && episodeList && !searchResults) {
       return (
         <div>
-          <PlaylistNameForm
-            pbsShowName={selectedShowName}
-            playListNameCallback={handle_PlaylistName}
-          />
           <SpotifySearch
             spotifyApi={spotifyApi}
             episodeList={episodeList}
             searchResultsCallback={handle_SearchResultsCallback}
             searchPercentageCallback={handle_SearchPercentageCallback}
+          />
+        </div>
+      );
+    }
+  };
+
+  const renderPlaylistSaver = () => {
+    if (searchResults && searchPercentage === 100) {
+      return (
+        <div>
+          <PlaylistSaver
+            searchResults={searchResults}
+            spotifyApi={spotifyApi}
+            playlistSaverCallback={handle_PlaylistSaverCallback}
+            pbsShowName={selectedShowName}
           />
         </div>
       );
@@ -144,8 +156,8 @@ export const Forge = ({ sessionData }: any) => {
     <div className="bg-babyPink min-h-screen">
       <Header displayName={displayName} loggedIn={loggedIn} />
       <ShowSelect ShowSelectCallback={handle_showSelect} />
-      {renderSpotifyFunctionality()}
-      <div className="text-center text-xl">{tableDisplayState}</div>
+      {renderSpotifySearch()}
+      {renderPlaylistSaver()}
       {renderTable()}
     </div>
   );

@@ -11,7 +11,7 @@ export const { auth, handlers, signIn, signOut }  = NextAuth({
     providers: [SpotifyProvider({
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-        authorization:'https://accounts.spotify.com/authorize?scope=user-read-email,playlist-read-private,playlist-modify-private,playlist-modify-public',
+        authorization:'https://accounts.spotify.com/authorize?scope=playlist-modify-public',
     })],
     callbacks: {
 

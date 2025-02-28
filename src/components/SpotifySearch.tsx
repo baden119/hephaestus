@@ -15,6 +15,7 @@ interface SpotifySearch_props {
 const unbounded = Unbounded({
   weight: "300",
   subsets: ["latin"],
+  preload: true,
 });
 
 const SpotifySearch = ({
@@ -66,7 +67,7 @@ const SpotifySearch = ({
   };
   const SpotifySearch = async () => {
     // TODO Dynamic Episode Count
-    const episodeCount = 4;
+    const episodeCount = 3;
     const trackList: PbsTrack[] = [];
 
     // Parsing trackList out of episodeList

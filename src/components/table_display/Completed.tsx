@@ -8,6 +8,7 @@ interface Completed_props {
 const dm_sans = DM_Sans({
   weight: "400",
   subsets: ["latin"],
+  preload: true,
 });
 
 const CreateDate = (date: string) => {
