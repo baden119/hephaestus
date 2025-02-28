@@ -1,14 +1,14 @@
 "use client";
 import Select from "react-select";
+// TODO Update CurrentShowList 2025.
 import CurrentShowList from "../data/CurrentShowList.json";
 
 interface ShowSelect_props {
   // TODO Typing for callback function
-  loggedIn: boolean;
-  callback?: any;
+  ShowSelectCallback: any;
 }
 
-const ShowSelect = ({ loggedIn, callback }: ShowSelect_props) => {
+const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
   let selectOptions = CurrentShowList.map((show) => {
     return {
       label: show.name,
@@ -18,7 +18,7 @@ const ShowSelect = ({ loggedIn, callback }: ShowSelect_props) => {
   });
 
   const handleSelect = (e: any) => {
-    callback({
+    ShowSelectCallback({
       SelectedShowURL: e.url,
       SelectedShowName: e.label,
     });

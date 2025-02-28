@@ -70,6 +70,7 @@ const fetchEpisodeTrackLists = async (episodeList: PbsEpisode[]) :  Promise<PbsE
       // Parse out Artist and Title information from API response
       const parsedTrackList = trackList.map((trackData: PbsTrack) => {
           idCount += 1
+          // TODO Alter variable names (pbs_id or something)
           return {
             id: idCount,
             artist: trackData.artist,

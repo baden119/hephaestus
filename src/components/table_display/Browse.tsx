@@ -10,7 +10,7 @@ const dm_sans = DM_Sans({
   subsets: ["latin"],
 });
 
-// #LITTLEJOB Create Date, font data etc are repeated, export to single file.
+// TODO Create Date, font data etc are repeated, export to single file.
 
 const CreateDate = (date: string) => {
   return new Intl.DateTimeFormat("en-AU", {
@@ -59,6 +59,5 @@ const Browse = ({ episodeList }: Browse_props) => {
         <div className="hidden w-1/4 md:block"></div>
       </div>
     );
-  else return <p>No Data</p>;
 };
 export default Browse;

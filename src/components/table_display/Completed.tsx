@@ -21,6 +21,7 @@ const cellStyle = "px-1 border border-purple-400 text-sm md:text-base md:p-1";
 
 const renderRow = (song: PbsTrack, date: string) => {
   if (song.spotify_id)
+    // TODO Add track select/unselect functionality.
     return (
       <tr key={song.id} className="even:bg-tableStripe">
         <td className={cellStyle + " text-center"}>{CreateDate(date)}</td>

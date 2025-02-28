@@ -3,19 +3,19 @@ import { useState, useEffect } from "react";
 
 interface PlaylistNameForm_props {
   // TODO Typing for callback function
-  callback?: any;
+  playListNameCallback: any;
   pbsShowName: string | null;
 }
 
 const PlaylistNameForm = ({
   pbsShowName,
-  callback,
+  playListNameCallback,
 }: PlaylistNameForm_props) => {
   const [playlistName, setPlaylistName] = useState("");
 
   // Send Playlist name data back to parent component
   useEffect(() => {
-    callback(playlistName);
+    playListNameCallback(playlistName);
   }, [playlistName]);
 
   // AutoGenerate playlist name when new show is selected by user (via prop data)
