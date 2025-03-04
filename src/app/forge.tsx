@@ -10,6 +10,7 @@ import Browse from "@/components/table_display/Browse";
 import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
 import PlaylistSaver from "@/components/PlaylistSaver";
+import DropdownTest from "@/components/DropdownTest";
 
 // TODO proper typing for sessionData
 export const Forge = ({ sessionData }: any) => {
@@ -84,6 +85,7 @@ export const Forge = ({ sessionData }: any) => {
 
   // Callback Functions
   const handle_showSelect = (data: any) => {
+    // TODO Add in PBS Show Grid Description data here for display.
     setSelectedShowURL(data.SelectedShowURL);
     setSelectedShowName(data.SelectedShowName);
   };
@@ -156,6 +158,7 @@ export const Forge = ({ sessionData }: any) => {
     <div className="bg-babyPink min-h-screen">
       <Header displayName={displayName} loggedIn={loggedIn} />
       <ShowSelect ShowSelectCallback={handle_showSelect} />
+      <DropdownTest />
       {renderSpotifySearch()}
       {renderPlaylistSaver()}
       {renderTable()}
