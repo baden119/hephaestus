@@ -10,12 +10,14 @@ import Browse from "@/components/table_display/Browse";
 import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
 import PlaylistSaver from "@/components/PlaylistSaver";
-import DropdownTest from "@/components/DropdownTest";
 
 // TODO proper typing for sessionData
 export const Forge = ({ sessionData }: any) => {
   const [tableDisplayState, setTableDisplayState] = useState<string | null>(
     null
+  );
+  const [episodeCount, setEpisodeCount] = useState<number | undefined>(
+    undefined
   );
   const [episodeList, setEpisodeList] = useState<PbsEpisode[] | null>(null);
   const [searchResults, setSearchResults] = useState<PbsEpisode[] | null>(null);
@@ -23,11 +25,12 @@ export const Forge = ({ sessionData }: any) => {
   // TODO Is it better to use null or "" for initial string values?
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [playlistName, setPlaylistName] = useState("");
+  const [selectedShowDescription, setSelectedShowDescription] = useState("");
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
   const [selectedShowName, setSelectedShowName] = useState<string | null>(null);
   const [searchPercentage, setSearchPercentage] = useState<number>(0);
 
-  // When PBS Show is selected, fetch episodes from API and save songlist to state.
+  // When PBS Show is selected, fetch episodes from API, adjust length per episode count and save episodelist to state.
   useEffect(() => {
     setSearchResults(null);
     const fetchSongList = async () => {
@@ -35,7 +38,7 @@ export const Forge = ({ sessionData }: any) => {
         const { data } = await axios.post<PbsEpisode[]>("/api/pbs", {
           url: selectedShowURL,
         });
-        setEpisodeList(data);
+        setEpisodeList(data.slice(0, episodeCount));
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.log("error message: ", error.message);
@@ -46,11 +49,11 @@ export const Forge = ({ sessionData }: any) => {
         }
       }
     };
-    if (selectedShowURL !== null) {
+    if (selectedShowURL && episodeCount) {
       fetchSongList();
     }
     setTableDisplayState("Browse");
-  }, [selectedShowURL]);
+  }, [selectedShowURL, episodeCount]);
 
   // Check Session Data prop, set state values.
   // TODO Handle expired access token!
@@ -85,9 +88,10 @@ export const Forge = ({ sessionData }: any) => {
 
   // Callback Functions
   const handle_showSelect = (data: any) => {
-    // TODO Add in PBS Show Grid Description data here for display.
-    setSelectedShowURL(data.SelectedShowURL);
-    setSelectedShowName(data.SelectedShowName);
+    setEpisodeCount(data.episodeCount);
+    setSelectedShowDescription(data.selectedShowDescription);
+    setSelectedShowURL(data.selectedShowURL);
+    setSelectedShowName(data.selectedShowName);
   };
 
   const handle_PlaylistName = (data: string) => {
@@ -139,7 +143,13 @@ export const Forge = ({ sessionData }: any) => {
 
   const renderTable = () => {
     if (tableDisplayState === "Browse") {
-      return <Browse episodeList={episodeList} />;
+      return (
+        <Browse
+          episodeList={episodeList}
+          showName={selectedShowName}
+          showDescription={selectedShowDescription}
+        />
+      );
     }
     if (tableDisplayState === "Searching") {
       return (
@@ -158,7 +168,6 @@ export const Forge = ({ sessionData }: any) => {
     <div className="bg-babyPink min-h-screen">
       <Header displayName={displayName} loggedIn={loggedIn} />
       <ShowSelect ShowSelectCallback={handle_showSelect} />
-      <DropdownTest />
       {renderSpotifySearch()}
       {renderPlaylistSaver()}
       {renderTable()}

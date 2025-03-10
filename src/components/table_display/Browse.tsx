@@ -4,6 +4,8 @@ import { PbsEpisode, PbsTrack } from "@/utils/interfaces";
 
 interface Browse_props {
   episodeList: PbsEpisode[] | null;
+  showName: string | null;
+  showDescription: string;
 }
 
 const dm_sans = DM_Sans({
@@ -41,12 +43,15 @@ const renderRow = (song: PbsTrack, date: string) => {
   );
 };
 
-const Browse = ({ episodeList }: Browse_props) => {
+const Browse = ({ episodeList, showName, showDescription }: Browse_props) => {
   if (episodeList)
     return (
       <div className="flex justify-between">
         <div className="hidden w-1/4 md:block"></div>
         <div className={`${dm_sans.className} grow`}>
+          <p className={`${unbounded.className} text-xl text-center mb-3`}>
+            {showDescription}
+          </p>
           <table className="w-full table-auto border-collapse border border-purple-400">
             <thead>
               <tr>
@@ -61,6 +66,16 @@ const Browse = ({ episodeList }: Browse_props) => {
                     return renderRow(song, episode.date);
                   });
                 }
+                return (
+                  <tr key={episode.date} className="even:bg-tableStripe">
+                    <td className={cellStyle + " text-center"}>
+                      {CreateDate(episode.date)}
+                    </td>
+                    <td className={cellStyle}>
+                      ** No Tracklist For This Weeks Show. **
+                    </td>
+                  </tr>
+                );
               })}
             </tbody>
           </table>
