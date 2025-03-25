@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { PbsEpisode } from "@/utils/interfaces";
 import axios from "axios";
+import { Unbounded } from "next/font/google";
 import spotifyApi from "@/lib/spotify";
 import Header from "@/components/Header";
 import ShowSelect from "@/components/ShowSelect";
@@ -10,6 +11,14 @@ import Browse from "@/components/table_display/Browse";
 import Completed from "@/components/table_display/Completed";
 import Searching from "@/components/table_display/Searching";
 import PlaylistSaver from "@/components/PlaylistSaver";
+
+const unbounded = Unbounded({
+  weight: "300",
+  subsets: ["latin"],
+  preload: true,
+});
+
+// TODO Some kind of Alert Functionality
 
 // TODO proper typing for sessionData
 export const Forge = ({ sessionData }: any) => {
@@ -27,8 +36,10 @@ export const Forge = ({ sessionData }: any) => {
   const [playlistName, setPlaylistName] = useState("");
   const [selectedShowDescription, setSelectedShowDescription] = useState("");
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
-  const [selectedShowName, setSelectedShowName] = useState<string | null>(null);
+  const [selectedShowName, setSelectedShowName] = useState("");
   const [searchPercentage, setSearchPercentage] = useState<number>(0);
+  const [tokenExpires, setTokenExpires] = useState<number | null>(null);
+  const [resetTrigger, setResetTrigger] = useState(false);
 
   // When PBS Show is selected, fetch episodes from API, adjust length per episode count and save episodelist to state.
   useEffect(() => {
@@ -55,11 +66,27 @@ export const Forge = ({ sessionData }: any) => {
     setTableDisplayState("Browse");
   }, [selectedShowURL, episodeCount]);
 
+  // Handle expired access token.
+  // My attempts at using refresh token functionality haven't worked, it seems there is an issue with the library:
+  // https://github.com/thelinmichael/spotify-web-api-node/issues/441
+  // Automatic token refresh would be nice, but I dont think it's a critical issue given the purpose of the app.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      tokenExpires && console.log(tokenExpires - Date.now());
+      if (tokenExpires && Date.now() >= tokenExpires) {
+        console.log("Expired access token, logging out!");
+        setLoggedIn(false);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Check Session Data prop, set state values.
-  // TODO Handle expired access token!
   useEffect(() => {
     if (sessionData) {
       spotifyApi.setAccessToken(sessionData.token.access_token);
+      setTokenExpires(Date.now() + 3600000);
       setLoggedIn(true);
       spotifyApi.getMe().then(
         function (data) {
@@ -69,10 +96,13 @@ export const Forge = ({ sessionData }: any) => {
         },
         function (err) {
           console.error(err);
+          console.log("Setting LoggedIn to False...");
+          setLoggedIn(false);
         }
       );
-      // TODO maybe reset some state values here?
-    } else setLoggedIn(false);
+    } else {
+      setLoggedIn(false);
+    }
   }, [sessionData]);
 
   // Adjust TableDisplay during and after Spotify Search
@@ -110,6 +140,15 @@ export const Forge = ({ sessionData }: any) => {
     console.log("Data recieved from Playlist Saver component...");
   };
 
+  const handle_resetCallback = () => {
+    setResetTrigger((prev) => !prev);
+    setTableDisplayState(null);
+    setEpisodeList(null);
+    setSearchResults(null);
+    setPlaylistName("");
+    setSearchPercentage(0);
+  };
+
   // Component Rendering
   const renderSpotifySearch = () => {
     if (loggedIn && episodeList && !searchResults) {
@@ -134,6 +173,7 @@ export const Forge = ({ sessionData }: any) => {
             searchResults={searchResults}
             spotifyApi={spotifyApi}
             playlistSaverCallback={handle_PlaylistSaverCallback}
+            resetCallback={handle_resetCallback}
             pbsShowName={selectedShowName}
           />
         </div>
@@ -167,10 +207,23 @@ export const Forge = ({ sessionData }: any) => {
   return (
     <div className="bg-babyPink min-h-screen">
       <Header displayName={displayName} loggedIn={loggedIn} />
-      <ShowSelect ShowSelectCallback={handle_showSelect} />
+      <ShowSelect
+        ShowSelectCallback={handle_showSelect}
+        resetTrigger={resetTrigger}
+      />
       {renderSpotifySearch()}
       {renderPlaylistSaver()}
       {renderTable()}
     </div>
   );
 };
+
+// GENERAL PURPOSE BUTTON
+// <div className="flex justify-center my-2">
+//   <button
+//     className="bg-navBarPurple flex items-center hover:bg-altNavBarPurple text-black mx-6 py-2 px-4 rounded-full md:py-5 md:px-10"
+//     onClick={() => resetTest()}
+//   >
+//     <div className={`${unbounded.className}`}>Reset</div>
+//   </button>
+// </div>

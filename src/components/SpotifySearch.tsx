@@ -34,7 +34,7 @@ const SpotifySearch = ({
 
   // SongList Callback
   useEffect(() => {
-    if (searchPercentage === 100) {
+    if (searchPercentage === 100 && searchResults.length) {
       searchResultsCallback(searchResults);
     }
   }, [searchPercentage]);
@@ -66,17 +66,13 @@ const SpotifySearch = ({
     setSearchPercentage(newCount);
   };
   const SpotifySearch = async () => {
-    // TODO Dynamic Episode Count
-    const episodeCount = 3;
     const trackList: PbsTrack[] = [];
 
     // Parsing trackList out of episodeList
-    episodeList?.forEach((episode, index) => {
-      if (index < episodeCount) {
-        episode.trackList?.forEach((track) => {
-          trackList.push(track);
-        });
-      }
+    episodeList?.forEach((episode) => {
+      episode.trackList?.forEach((track) => {
+        trackList.push(track);
+      });
     });
 
     // TODO Move this function to a library file?

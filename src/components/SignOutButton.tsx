@@ -26,10 +26,5 @@ export const SignOutButton = ({
         </div>
       </button>
     );
-  } else
-    return (
-      <button className="text-2xl text-white" onClick={() => logout()}>
-        Sign Out of Spotify
-      </button>
-    );
+  }
 };

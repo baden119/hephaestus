@@ -23,10 +23,10 @@ const unbounded = Unbounded({
 
 const Header = ({ loggedIn, displayName }: HeaderProps) => {
   const renderButton = () => {
-    if (!loggedIn) {
-      return <SignInButton />;
-    } else {
+    if (loggedIn) {
       return <SignOutButton displayName={displayName} />;
+    } else {
+      return <SignInButton />;
     }
   };
 

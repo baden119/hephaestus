@@ -10,6 +10,7 @@ interface PlaylistSaver_props {
   spotifyApi: SpotifyWebApi;
   pbsShowName: string | null;
   playlistSaverCallback: any;
+  resetCallback: any;
 }
 
 const unbounded = Unbounded({
@@ -23,6 +24,7 @@ const PlaylistSaver = ({
   spotifyApi,
   pbsShowName,
   playlistSaverCallback,
+  resetCallback,
 }: PlaylistSaver_props) => {
   const [playlistName, setPlaylistName] = useState("");
 
@@ -42,8 +44,11 @@ const PlaylistSaver = ({
       setPlaylistName(generatePlaylistName());
     }
   }, [pbsShowName]);
+
   const savePlaylist = async () => {
     const spotifyIDs: string[] = [];
+    // Spotify has a limit on how many songs can be added to a playlist with one request.
+    const API_limit = 99;
 
     // Parse Spotify IDs out of searchResults array
     searchResults?.forEach((episode) => {
@@ -54,22 +59,49 @@ const PlaylistSaver = ({
       });
     });
 
+    const adjusted_arrays = spotifyIDs.reduce<string[][]>(
+      (adjusted, item, index) => {
+        const limitIndex = Math.floor(index / API_limit);
+
+        // Initialize the subarray if it doesn't exist
+        if (!adjusted[limitIndex]) {
+          adjusted[limitIndex] = [];
+        }
+
+        // Add the current item to the appropriate subarray
+        adjusted[limitIndex].push(item);
+
+        return adjusted;
+      },
+      []
+    );
+
     // Use Spotify IDs to create a playlist.
-    // TODO functionality for long ID Lists.
     try {
       const createResponse = await spotifyApi.createPlaylist(playlistName, {
         description: "Created By Pbspotify",
         public: true,
       });
       const newPlaylistID = createResponse.body.id;
-      const populateResponse = await spotifyApi.addTracksToPlaylist(
-        newPlaylistID,
-        spotifyIDs
-      );
-      console.log(populateResponse.body);
+
+      adjusted_arrays.map(async (array) => {
+        try {
+          const populateResponse = await spotifyApi.addTracksToPlaylist(
+            newPlaylistID,
+            array
+          );
+          console.log(populateResponse.body);
+        } catch (err) {
+          console.error(err);
+        }
+      });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const reset = () => {
+    resetCallback();
   };
 
   return (
@@ -101,6 +133,12 @@ const PlaylistSaver = ({
         >
           <div className="hidden md:block md:mr-1">{<FaSpotify />}</div>
           <div className={`${unbounded.className}`}>Save Playlist</div>
+        </button>
+        <button
+          className="bg-navBarPurple flex items-center hover:bg-altNavBarPurple text-black mx-6 py-2 px-4 rounded-full md:py-5 md:px-10"
+          onClick={() => reset()}
+        >
+          <div className={`${unbounded.className}`}>Reset</div>
         </button>
       </div>
     </div>

@@ -3,16 +3,38 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import CurrentShows from "../data/currentShows.json";
 
-interface ShowSelect_props {
-  // TODO Typing for callback function
-  ShowSelectCallback: any;
+interface ShowSelectCallbackParams {
+  episodeCount: number;
+  selectedShowURL: string | null;
+  selectedShowName: string;
+  selectedShowDescription: string;
 }
 
-const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
+interface ShowSelect_props {
+  ShowSelectCallback: (data: ShowSelectCallbackParams) => void;
+  resetTrigger: boolean;
+}
+
+const ShowSelect = ({ ShowSelectCallback, resetTrigger }: ShowSelect_props) => {
   const [episodeCount, setEpisodeCount] = useState(5);
   const [selectedShowName, setSelectedShowName] = useState("");
   const [selectedShowURL, setSelectedShowURL] = useState<string | null>(null);
   const [selectedShowDescription, setSelectedShowDescription] = useState("");
+  const [selectedShowOption, setSelectedShowOption] = useState(null); // For resetting the show select
+  const [selectedEpisodeOption, setSelectedEpisodeOption] = useState({
+    value: 5,
+    label: "5",
+  }); // For resetting the episode count select
+
+  useEffect(() => {
+    // Reset state when resetTrigger changes
+    setEpisodeCount(5);
+    setSelectedShowName("");
+    setSelectedShowURL(null);
+    setSelectedShowDescription("");
+    setSelectedShowOption(null); // Reset the show select to default
+    setSelectedEpisodeOption({ value: 5, label: "5" }); // Reset the episode count select to default
+  }, [resetTrigger]);
 
   useEffect(() => {
     ShowSelectCallback({
@@ -20,11 +42,6 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
       selectedShowURL: selectedShowURL,
       selectedShowName: selectedShowName,
       selectedShowDescription: selectedShowDescription,
-
-      // episodeCount,
-      // selectedShowURL,
-      // selectedShowName,
-      // selectedShowDescription,
     });
   }, [selectedShowName, episodeCount]);
 
@@ -54,10 +71,12 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
     setSelectedShowName(e.label);
     setSelectedShowURL(e.url);
     setSelectedShowDescription(e.description);
+    setSelectedShowOption(e); // Update the selected option
   };
 
   const handleEpisodeSelect = (e: any) => {
     setEpisodeCount(e.value);
+    setSelectedEpisodeOption(e); // Update the selected option
   };
 
   return (
@@ -68,7 +87,7 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
           className="block text-gray-700 text-sm font-bold"
           htmlFor="ShowSelect"
         >
-          PBS Show
+          PBS Show {resetTrigger.toString()}
         </label>
         <Select
           maxMenuHeight={500}
@@ -76,6 +95,7 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
           isSearchable={false}
           options={selectOptions}
           instanceId={"ShowSelect"}
+          value={selectedShowOption} // Controlled value for reset
           onChange={handleShowSelect}
         />
       </div>
@@ -92,6 +112,7 @@ const ShowSelect = ({ ShowSelectCallback }: ShowSelect_props) => {
           isSearchable={false}
           options={episodCountOptions}
           instanceId={"episodeCountSelect"}
+          value={selectedEpisodeOption} // Controlled value for reset
           onChange={handleEpisodeSelect}
         />
       </div>
